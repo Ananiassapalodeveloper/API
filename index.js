@@ -7,6 +7,34 @@ app.use(express.json());
 
 // Rotas
 
+// Array de usuários (simulando um banco de dados)
+const users = [
+  { id: 1, username: 'ananias', password: '1234' },
+  { id: 2, username: 'manuel', password: '1234' },
+  { id: 3, username: 'helmer', password: '12345' },
+];
+
+// Rotas
+
+// Rota de login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username e password são obrigatórios.' });
+  }
+
+  const user = users.find(u => u.username === username && u.password === password);
+
+  if (!user) {
+    return res.status(401).json({ error: 'Credenciais inválidas.' });
+  }
+
+  // Aqui você pode gerar um token JWT ou simplesmente retornar o usuário
+  res.json({ message: 'Login bem-sucedido!', user });
+});
+
+
 // Listar todas as tarefas
 app.get('/tasks', async (req, res) => {
   try {
@@ -91,6 +119,7 @@ app.delete('/tasks', async (req, res) => {
 
 // Inicializar o servidor
 const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
 });
+
